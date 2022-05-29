@@ -1,0 +1,14 @@
+{
+  "name": "com.hibzz.merge",
+  "version": "0.1.0",
+  "displayName": "hibzz.merge",
+  "description": "A tool used to resolve merge conflicts in Unity scene files",
+  "author": {
+    "name": "Hibzz Games",
+    "email": "support@hibzz.games",
+    "url": "https://hibzz.games/"
+  },
+  "documentationUrl": "https://github.com/Hibzz-Games/Hibzz.Merge/blob/main/README.md",
+  "changelogUrl": "https://github.com/Hibzz-Games/Hibzz.Merge/commits/",
+  "licensesUrl": "https://github.com/Hibzz-Games/Hibzz.Merge/blob/main/LICENSE.md"
+}
