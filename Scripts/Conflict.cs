@@ -10,5 +10,10 @@ namespace Hibzz.Merge
         public string VariableName;
         public string Current;
         public string Remote;
-    }
+
+		public override string ToString()
+		{
+            return $"{VariableName}[{ObjectId}] - Current: {Current} - Remote: {Remote}";
+		}
+	}
 }
