@@ -11,6 +11,9 @@ namespace Hibzz.Merge
 		// The name of the file we are currently working on
 		protected FileInfo file;
 
+		// A list of conflicts found in the file
+		protected List<Conflict> conflicts = new List<Conflict>();
+
 		protected int p_CountConflicts(string fp)
 		{
 			// variable used to count conflicts
@@ -82,6 +85,9 @@ namespace Hibzz.Merge
 
 				// delete the conflicted scene
 				File.Delete(tmpFile);
+
+				// (if any) clear existing conflicts
+				conflicts.Clear();
 			}
 		}
 
