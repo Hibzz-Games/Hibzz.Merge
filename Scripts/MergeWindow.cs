@@ -61,7 +61,6 @@ namespace Hibzz.Merge
 
 			// Draw the content saying how many conflicts were found
 			GUILayout.Label($"{conflictCount} conflict(s) found!");
-
 			GUILayout.FlexibleSpace();
 			
 			// And when there are conflicts, add a button to handle the conflicts
