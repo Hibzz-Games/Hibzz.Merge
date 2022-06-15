@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
-using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Hibzz.Merge
@@ -69,6 +67,7 @@ namespace Hibzz.Merge
 			EditorSceneManager.OpenScene($"{file.FullNameWithoutExtension()}.current.tmp.unity");
 		}
 
+		// Destroy the generated temprary scene and open the (previously) conflicted scene
 		private void DestroyTempScene()
 		{
 			string tmpFile = $"{file.FullNameWithoutExtension()}.current.tmp.unity";
