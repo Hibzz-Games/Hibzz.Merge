@@ -132,7 +132,7 @@ namespace Hibzz.Merge
 			{
 				if (prev.StartsWith("--- "))
 				{
-					objectId = prev.Replace("--- ", string.Empty);
+					objectId = prev.Substring(prev.IndexOf('&') + 1);
 					break;
 				}
 			}
@@ -228,6 +228,19 @@ namespace Hibzz.Merge
 		/// Proceed with the required steps to handle the conflict in the scenes
 		/// </summary>
 		public static void FixConflicts() => GetOrCreateInstance()._FixConflicts();
+
+		/// <summary>
+		/// Get a list of conflicts when actively responding
+		/// </summary>
+		public static List<Conflict> Conflicts => GetOrCreateInstance().conflicts;
+
+		/// <summary>
+		/// Is the system actively resolving conflict now?
+		/// </summary>
+		public static bool IsResolving 
+		{ 
+			get { return GetOrCreateInstance().conflicts.Count > 0; } 
+		}
 
 		[MenuItem("Hibzz/Test")]
 		public static void TempFunc() => GetOrCreateInstance().DestroyTempScene();
