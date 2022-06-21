@@ -51,11 +51,7 @@ namespace Hibzz.Merge
 			if(conflictCount > 0)
 			{
 				Rect offsetRect = new Rect(selectionRect.position + offset, selectionRect.size);
-				GUI.Label(offsetRect, $"[{conflictCount} conflicts]", new GUIStyle() 
-				{
-					normal = new GUIStyleState() { textColor = Color.red },
-					alignment = TextAnchor.MiddleRight
-				});
+				GUI.Label(offsetRect, $"[{conflictCount} conflicts]", EditorStyleUtility.HierarchyConflictStyle);
 			}
 		}
 	}
