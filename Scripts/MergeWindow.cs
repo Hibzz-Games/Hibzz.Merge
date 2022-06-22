@@ -9,12 +9,12 @@ namespace Hibzz.Merge
 	{
 		// The selected scene asset
 		SceneAsset _sceneAsset;
-		SceneAsset sceneAsset 
-		{ 
-			get { return _sceneAsset; } 
+		SceneAsset sceneAsset
+		{
+			get { return _sceneAsset; }
 			set
 			{
-				if(_sceneAsset == value) { return; }
+				if (_sceneAsset == value) { return; }
 
 				fileReset = true;
 				_sceneAsset = value;
@@ -24,7 +24,7 @@ namespace Hibzz.Merge
 		bool fileReset = false;
 
 		// A count of the number of conflicts
-		int? conflictCount = null;
+		bool? conflictCount = null;
 
 		[MenuItem("Window/Hibzz Merge")]
 		private static void ShowWindow()
@@ -37,36 +37,43 @@ namespace Hibzz.Merge
 		{
 			// Read the scene asset
 			sceneAsset = EditorGUILayout.ObjectField("Scene", sceneAsset, typeof(SceneAsset), false) as SceneAsset;
-			
+
 			// if the file was reset, then handle that
-			if(fileReset)
+			if (fileReset)
 			{
 				conflictCount = null;
 				fileReset = false;
 			}
 
 			// Do not proceed if no scene is selected
-			if(sceneAsset == null) { return; }
+			if (sceneAsset == null) { return; }
 
 			// Add button to analyze the scene for merge conflicts
 			GUILayout.Space(10);
 			if (GUILayout.Button("Analyze for Merge Conflicts", GUILayout.Height(30)))
 			{
 				string fp = AssetDatabase.GetAssetPath(sceneAsset.GetInstanceID());
-				conflictCount = MergeManager.CountConflicts(fp);
+				conflictCount = MergeManager.HasConflicts(fp);
 			}
 
 			// if the conflict count is null, then it wasn't analyzed... So, don't report anything
-			if(conflictCount == null) { return; }
+			if (conflictCount is null) { return; }
 
-			// Draw the content saying how many conflicts were found
-			GUILayout.Label($"{conflictCount} conflict(s) found!");
-			GUILayout.FlexibleSpace();
-			
-			// And when there are conflicts, add a button to handle the conflicts
-			if (conflictCount > 0 && GUILayout.Button("Fix Conflicts", GUILayout.Height(35)))
+			// Draw the content saying if conflicts were found many conflicts were found
+			if (conflictCount is false)
 			{
-				MergeManager.FixConflicts();
+				GUILayout.Label($"No conflicts found!");
+			}
+			else
+			{
+				GUILayout.Label($"Conflicts found!");
+
+				// And when there are conflicts, add a button to handle the conflicts
+				GUILayout.FlexibleSpace();
+				if (GUILayout.Button("Fix Conflicts", GUILayout.Height(35)))
+				{
+					MergeManager.FixConflicts();
+				}
 			}
 		}
 	}

@@ -41,10 +41,7 @@ namespace Hibzz.Merge
 			foreach(var component in components)
 			{
 				var id = component.GetLocalIdentifierInFile().ToString();
-				var hasConflict = MergeManager.Conflicts.Exists((conflict) => conflict.ObjectId == id);
-
-				// increase the conflict counter
-				if(hasConflict) { conflictCount++; }
+				conflictCount += MergeManager.Conflicts.FindAll((conflict) => conflict.ObjectId == id).Count;
 			}
 
 			// If there are conflicts, then draw that on the hierarchy window

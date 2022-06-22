@@ -15,32 +15,31 @@ namespace Hibzz.Merge
 		// A list of conflicts found in the file
 		protected List<Conflict> conflicts = new List<Conflict>();
 
-		protected int _CountConflicts(string fp)
-		{
-			// variable used to count conflicts
-			int count = 0;
 
+		// Are there conflicts in the given filepath
+		protected bool _HasConflicts(string fp)
+		{
 			// create the reader for the given filepath
 			StreamReader reader = new StreamReader(fp);
-			if (reader == null) { return 0; }
+			if (reader == null) { return false; }
 
 			// Loop and read through the entire file
 			string line = reader.ReadLine();
 			while (line != null)
 			{
-				// A conflict in a conflicted git file starts with <<<<<<<
-				// so, we increment the conflict count
+				// A conflict in a conflicted git file starts with "<<<<<<<"
+				// so, we return that after caching the file info for the given filepath
 				if (line.StartsWith("<<<<<<<"))
 				{
-					count++;
+					file = new FileInfo(fp);
+					return true;
 				}
 
-				// go to the next line
+				// continue reading
 				line = reader.ReadLine();
 			}
 
-			file = new FileInfo(fp);
-			return count;
+			return false;
 		}
 
 		protected void _FixConflicts()
@@ -218,11 +217,11 @@ namespace Hibzz.Merge
 		#region Public Singleton Accessors
 
 		/// <summary>
-		/// Get the number of conflicts in a given file
+		/// Check if the given filepath has any conflicts to it
 		/// </summary>
 		/// <param name="fp">Filepath of the file to look into</param>
-		/// <returns>The number of the conflicts in the given file</returns>
-		public static int CountConflicts(string fp) => GetOrCreateInstance()._CountConflicts(fp);
+		/// <returns>Does the file have any conflicts?</returns>
+		public static bool HasConflicts(string fp) => GetOrCreateInstance()._HasConflicts(fp);
 
 		/// <summary>
 		/// Proceed with the required steps to handle the conflict in the scenes

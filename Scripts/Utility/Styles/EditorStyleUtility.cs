@@ -8,7 +8,7 @@ namespace Hibzz.Merge
     {
 		#region Readonly Color
 
-		private static readonly Color errorColor = new Color(0.65882f, 0, 0);
+		private static readonly Color errorColor = new Color(1.0f, 0.43137f, 0.25098f);
 
 		#endregion
 
@@ -20,7 +20,7 @@ namespace Hibzz.Merge
 				// if null, then set value to the new one
 				_hierarchyConflictStyle ??= new GUIStyle()
 				{
-					normal = new GUIStyleState() { textColor = Color.red },
+					normal = new GUIStyleState() { textColor = errorColor },
 					alignment = TextAnchor.MiddleRight
 				};
 
