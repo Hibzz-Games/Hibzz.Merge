@@ -9,16 +9,6 @@ namespace Hibzz.Merge
 	[InitializeOnLoad]
 	public static class HierarchyMonitor
 	{
-		/// <summary>
-		/// Offset of the icon in heirarchy window
-		/// </summary>
-		static Vector2 offset = new Vector2(0, 0);
-
-		/// <summary>
-		/// Size of the icon
-		/// </summary>
-		static Vector2 size = new Vector2(50, 50);
-
 		static HierarchyMonitor()
 		{
 			EditorApplication.hierarchyWindowItemOnGUI += HandleHierarchyItemOnGUI;
@@ -33,21 +23,13 @@ namespace Hibzz.Merge
 			GameObject obj = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
 			if(obj is null) { return; }
 
-			// increase the count conflict
-			int conflictCount = 0;
-
-			// get all the components of the gameobject and check if it matches
-			var components = obj.GetComponents<Component>();
-			foreach(var component in components)
-			{
-				var id = component.GetLocalIdentifierInFile().ToString();
-				conflictCount += MergeManager.Conflicts.FindAll((conflict) => conflict.ObjectId == id).Count;
-			}
+			// Get the number of conflicts in the gameobject from the merge manager
+			int conflictCount = MergeManager.Conflicts(obj).Count;
 
 			// If there are conflicts, then draw that on the hierarchy window
 			if(conflictCount > 0)
 			{
-				Rect offsetRect = new Rect(selectionRect.position + offset, selectionRect.size);
+				Rect offsetRect = new Rect(selectionRect.position, selectionRect.size);
 				GUI.Label(offsetRect, $"[{conflictCount} conflicts]", EditorStyleUtility.HierarchyConflictStyle);
 			}
 		}

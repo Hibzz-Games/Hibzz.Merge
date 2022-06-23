@@ -42,6 +42,7 @@ namespace Hibzz.Merge
 			return false;
 		}
 
+		// Enter the merge resolution mode
 		protected void _FixConflicts()
 		{
 			// Save the current version of the conflicted file in a temp file
@@ -53,6 +54,27 @@ namespace Hibzz.Merge
 			// open tmp scene in unity editor
 			OpenTempScene();
 			
+		}
+
+		// Get a list of conflicts in the given gameobject
+		protected List<Conflict> _GetConflict(GameObject obj)
+		{
+			// the variable to store the filtered conflicts
+			List<Conflict> objConflicts = new List<Conflict>();
+
+			// start with looking at the gameobject properties itself
+			var id = obj.GetLocalIdentifierInFile().ToString();
+			objConflicts.AddRange(conflicts.FindAll((conflict) => conflict.ObjectId == id));
+
+			// now look at each components in the object
+			var components = obj.GetComponents<Component>();
+			foreach(var component in components)
+			{
+				id = component.GetLocalIdentifierInFile().ToString();
+				objConflicts.AddRange(conflicts.FindAll((conflict) => conflict.ObjectId == id));
+			}
+
+			return objConflicts;
 		}
 
 		// Get the current version of the conflicted file and save it as scenename.current.tmp.scene
@@ -229,9 +251,16 @@ namespace Hibzz.Merge
 		public static void FixConflicts() => GetOrCreateInstance()._FixConflicts();
 
 		/// <summary>
+		/// Get a list of conflicts in the requested gameobject
+		/// </summary>
+		/// <param name="gameObject">The gameobject to look into</param>
+		/// <returns>A list of conflicts in the requested gameobject</returns>
+		public static List<Conflict> Conflicts(GameObject gameObject) => GetOrCreateInstance()._GetConflict(gameObject);
+
+		/// <summary>
 		/// Get a list of conflicts when actively responding
 		/// </summary>
-		public static List<Conflict> Conflicts => GetOrCreateInstance().conflicts;
+		public static List<Conflict> Conflicts() => GetOrCreateInstance().conflicts;
 
 		/// <summary>
 		/// Is the system actively resolving conflict now?
