@@ -241,8 +241,10 @@ namespace Hibzz.Merge
 			get { return GetOrCreateInstance().conflicts.Count > 0; } 
 		}
 
-		[MenuItem("Hibzz/Test")]
-		public static void TempFunc() => GetOrCreateInstance().DestroyTempScene();
+		/// <summary>
+		/// Abort the resolving procees
+		/// </summary>
+		public static void Abort() => GetOrCreateInstance().DestroyTempScene();
 		#endregion
 	}
 }

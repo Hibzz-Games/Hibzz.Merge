@@ -21,10 +21,11 @@ namespace Hibzz.Merge
 			}
 		}
 
+		// was the file reset?
 		bool fileReset = false;
 
 		// A count of the number of conflicts
-		bool? conflictCount = null;
+		bool? hasConflicts = null;
 
 		[MenuItem("Window/Hibzz Merge")]
 		private static void ShowWindow()
@@ -41,40 +42,82 @@ namespace Hibzz.Merge
 			// if the file was reset, then handle that
 			if (fileReset)
 			{
-				conflictCount = null;
+				hasConflicts = null;
 				fileReset = false;
 			}
 
 			// Do not proceed if no scene is selected
 			if (sceneAsset == null) { return; }
 
-			// Add button to analyze the scene for merge conflicts
+			// Draw the buttons to display the analysis and fix conflicts button
+			DrawBaseButtons();
+
+			// When the merge manager is actively resolving, then it should draw
+			// all conflicts in that gameobject
+			if (MergeManager.IsResolving)
+			{
+				DrawConflictOnSelectedGameObject();
+			}
+		}
+
+		private void DrawBaseButtons()
+		{
 			GUILayout.Space(10);
-			if (GUILayout.Button("Analyze for Merge Conflicts", GUILayout.Height(30)))
+
+			if(MergeManager.IsResolving)
 			{
-				string fp = AssetDatabase.GetAssetPath(sceneAsset.GetInstanceID());
-				conflictCount = MergeManager.HasConflicts(fp);
+				// when actively resolving, add the abort button
+				if(GUILayout.Button("Abort Resolving", GUILayout.Height(30)))
+				{
+					MergeManager.Abort();
+					fileReset = true;
+				}
 			}
-
-			// if the conflict count is null, then it wasn't analyzed... So, don't report anything
-			if (conflictCount is null) { return; }
-
-			// Draw the content saying if conflicts were found many conflicts were found
-			if (conflictCount is false)
+			else if (hasConflicts is true)
 			{
-				GUILayout.Label($"No conflicts found!");
-			}
-			else
-			{
-				GUILayout.Label($"Conflicts found!");
-
-				// And when there are conflicts, add a button to handle the conflicts
-				GUILayout.FlexibleSpace();
-				if (GUILayout.Button("Fix Conflicts", GUILayout.Height(35)))
+				// Conflicts are found, so add the button to handle the conflicts
+				if (GUILayout.Button("Fix Conflicts", GUILayout.Height(30)))
 				{
 					MergeManager.FixConflicts();
 				}
+
+				// notify the user that there are conflicts found in the scene
+				GUILayout.Label($"Conflicts found!");
 			}
+			else
+			{
+				// Since no conflicts are found (yet), we add a button to analyze for conflicts
+				// This will alter that variable to either true or false
+				if (GUILayout.Button("Analyze for Merge Conflicts", GUILayout.Height(30)))
+				{
+					string fp = AssetDatabase.GetAssetPath(sceneAsset.GetInstanceID());
+					hasConflicts = MergeManager.HasConflicts(fp);
+				}
+
+				// we notify that there are no conflicts found only when the value is false
+				// (this variable can be null)
+				if (hasConflicts is false)
+				{
+					GUILayout.Label($"No conflicts found!");
+				}
+			}
+		}
+
+		Vector2 scrollposition;
+
+		private void DrawConflictOnSelectedGameObject()
+		{
+			// Simple seperator line
+			EditorGUILayout.Space(10);
+			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+			// Create the scrollable zone
+			scrollposition = EditorGUILayout.BeginScrollView(scrollposition);
+
+			// TODO: Fill content here
+
+			// end the scrollable zone
+			EditorGUILayout.EndScrollView();
 		}
 	}
 }
