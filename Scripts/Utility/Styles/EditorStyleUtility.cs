@@ -9,6 +9,7 @@ namespace Hibzz.Merge
 		#region Readonly Color
 
 		private static readonly Color errorColor = new Color(1.0f, 0.43137f, 0.25098f);
+		private static readonly Color inactiveColor = new Color(0.45098f, 0.45098f, 0.45098f);
 
 		#endregion
 
@@ -25,6 +26,23 @@ namespace Hibzz.Merge
 				};
 
 				return _hierarchyConflictStyle;
+			}
+		}
+
+		private static GUIStyle _inactiveFontStyle;
+		internal static GUIStyle InactiveFontStyle
+		{
+			get
+			{
+				// when null set the value to the new one
+				_inactiveFontStyle ??= new GUIStyle()
+				{
+					normal = new GUIStyleState() { textColor = inactiveColor },
+					fontStyle = FontStyle.Italic,
+					alignment = TextAnchor.MiddleCenter
+				};
+
+				return _inactiveFontStyle;
 			}
 		}
 	}

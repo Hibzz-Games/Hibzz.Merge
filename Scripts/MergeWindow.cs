@@ -33,6 +33,12 @@ namespace Hibzz.Merge
 			var window = GetWindow<MergeWindow>();
 			window.titleContent = new GUIContent("Hibzz Merge");
 		}
+		
+		// Repaint when an object is selected
+		private void OnSelectionChange()
+		{
+			Repaint();
+		}
 
 		private void OnGUI()
 		{
@@ -56,7 +62,7 @@ namespace Hibzz.Merge
 			// all conflicts in that gameobject
 			if (MergeManager.IsResolving)
 			{
-				DrawConflictOnSelectedGameObject();
+				DrawConflicts();
 			}
 		}
 
@@ -105,7 +111,7 @@ namespace Hibzz.Merge
 
 		Vector2 scrollposition;
 
-		private void DrawConflictOnSelectedGameObject()
+		private void DrawConflicts()
 		{
 			// Simple seperator line
 			EditorGUILayout.Space(10);
@@ -114,10 +120,27 @@ namespace Hibzz.Merge
 			// Create the scrollable zone
 			scrollposition = EditorGUILayout.BeginScrollView(scrollposition);
 
-			// TODO: Fill content here
+			DrawConflictsOnSelectedGameobject();
 
 			// end the scrollable zone
 			EditorGUILayout.EndScrollView();
+		}
+
+		// Draw the conflicts in a selected gameobject
+		private void DrawConflictsOnSelectedGameobject()
+		{
+			GameObject selected = Selection.activeGameObject;
+			if(selected is null)
+			{
+				// notify that there are no gameobjects select
+				GUILayout.FlexibleSpace();
+				GUILayout.Label("Select a conflicted gameobject to resolve conflicts", EditorStyleUtility.InactiveFontStyle);
+				GUILayout.FlexibleSpace();
+				return;
+			}
+
+			// draw the conflicts on the gameobject here
+			GUILayout.Label($"{selected.name} is selected");
 		}
 	}
 }
