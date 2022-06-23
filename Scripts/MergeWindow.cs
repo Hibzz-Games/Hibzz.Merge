@@ -139,8 +139,20 @@ namespace Hibzz.Merge
 				return;
 			}
 
+			// get the conflicts in the selected object
+			var conflicts = MergeManager.Conflicts(selected);
+
+			// if there are no conflicts, then notify that.
+			if(conflicts.Count == 0)
+			{
+				GUILayout.FlexibleSpace();
+				GUILayout.Label("Selected gameobject has no conflicts", EditorStyleUtility.InactiveFontStyle);
+				GUILayout.FlexibleSpace();
+				return;
+			}
+
 			// draw the conflicts on the gameobject here
-			GUILayout.Label($"{selected.name} is selected");
+			GUILayout.Label($"{conflicts.Count} conflict in the object {selected.name}");
 		}
 	}
 }
