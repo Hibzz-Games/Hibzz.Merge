@@ -151,8 +151,11 @@ namespace Hibzz.Merge
 				return;
 			}
 
-			// draw the conflicts on the gameobject here
-			GUILayout.Label($"{conflicts.Count} conflict in the object {selected.name}");
+			// draw each conflict for the user to interact with
+			foreach(var conflict in conflicts)
+			{
+				GUILayout.Label($"var: {conflict.VariableName} - current: {conflict.Current} - remote: {conflict.Remote}");
+			}
 		}
 	}
 }
